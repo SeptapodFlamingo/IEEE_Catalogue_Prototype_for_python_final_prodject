@@ -18,65 +18,62 @@ import re
 #Item_Name,,Quantity,,Location,,Description_and_Other_Information
 
 def output_writing(line_list):
+    """
+    Will take relevant outputs from comparisons and write to files as needed
+    
+    NOT IMPLIMENTED still figuring out how I want this displayed or in a file at all
+    """
+    pass
 
-
-#dealing with inconvertable values
-        invalid_quantity= True
-        
-        if quantity_str.isdigit():
-            quantity = int(quantity_str)
-            if quantity >= 0:
-                invalid_quantity= False
-        if invalid_quantity:
-            self.error_indicator.setText('Enter a valid quantity')
-        else:
-            self.clear_radio()
-                
-            with open('search_results.csv', 'w', newline='') as output_csv_file:
-                content = csv.writer(output_csv_file)
-                #content.writerow(['Name', 'Age', 'Selection'])     #this line should already exist
-                content.writerow([Item_Name,,Quantity,,Location,,Desc_an_Other_Info])
-                
-                
                 
 def searcher(tokenVal, choice):
     """
     Searches the input CSV file for a token
     """
-    with open('IEEE Catalogue Fall 24 -Cole - Parts Shelf.csv.csv', 'r') as input_file:
+    with open('IEEE Catalogue Fall 24 -Cole - Parts Shelf.csv', 'r') as input_file:
         #with open('search_results.csv', 'w', newline='') as ourput_csv_file:
                 
             
         match choice:               #personal preference for switch statements
-        case 'name':
-            slelction = 1
-        case 'quantity':
-            slelction = 3
-        case 'description':
-            slelction = 5
-        case 'location':
-            slelction = 7
-        case 'all':
-            slelction = -1
-        default:
-            slelction = 0
-        
-
-
+            case 'name':
+                slelction = 1
+            case 'quantity':
+                slelction = 13
+            case 'description':
+                slelction = 8       #should be 7, but accedentally have extra comma in the file
+            case 'location':
+                slelction = 15
+            case 'all':
+                slelction = -1
+            case _:
+                slelction = 0
 
         #content = csv.writer(ourput_csv_file)
         #content.writerow(['Item_Name','','Quantity','','Location','','Desc_an_Other_Info'])
         
-        list_o_lines = ['', '']
+        list_o_lines = []       #list for all valid matches
         
-        for line in input_file:
-            line = line.rstrip()
-            line_split = line.split()
-            if re.search(tokenVal, line_split[choice]):
-                list_o_lines.append(line)
-                
-                
-                
+        if slelction > 10:
+            slelction -= 10
+            for line in input_file:
+                if line:
+                    line = line.rstrip()
+                    line_split = line.split(',')
+
+                    if line_split[slelction]:
+                        if re.search(tokenVal, line_split[slelction]):
+                            list_o_lines.append(line)
+                        
+        else:
+            for line in input_file:
+                if line:                            #clean up input line and seperate by comma, if it exists
+                    line = line.rstrip()
+                    line_split = line.split(',')
+                    
+                    if line_split[slelction]:       #if the section being searched is not empty, see if it matches the token
+                        if tokenVal in line_split[slelction]:
+                            list_o_lines.append(line)
+                        
         return list_o_lines
         
             
@@ -84,12 +81,15 @@ def searcher(tokenVal, choice):
             
             
             
-            """
-            hold = 0
-            for x in order_preserver:
-                output_txt_file.write(f'{x:40s} - {counter_dict.get(x)} \n')
-                hold += counter_dict.get(x)
+        """
+                            print("In {0} search for \"{1}\"".format(line_split[slelction], tokenVal))
 
-            output_txt_file.write('-------------------------------------------------\n')
-            output_txt_file.write(f'{"Total emails":40s} - {hold}')
-            """
+
+        hold = 0
+        for x in order_preserver:
+            output_txt_file.write(f'{x:40s} - {counter_dict.get(x)} \n')
+            hold += counter_dict.get(x)
+
+        output_txt_file.write('-------------------------------------------------\n')
+        output_txt_file.write(f'{"Total emails":40s} - {hold}')
+        """

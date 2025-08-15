@@ -15,6 +15,9 @@ from catallogue_searcher import *
 
 class Search(QMainWindow, Ui_MainWindow):
     def __init__(self):
+        """
+        bb
+        """
         super().__init__()
         self.setupUi(self)
         
@@ -25,6 +28,9 @@ class Search(QMainWindow, Ui_MainWindow):
              
         
     def unfinished_message(self):
+        """
+        bb
+        """
         self.clear_radio()
         self.error_indicator.setText('Unfinished section, please re-select')
         #if self.radioButton_name.isChecked():
@@ -32,10 +38,16 @@ class Search(QMainWindow, Ui_MainWindow):
 
         
     def clear_values(self):
+        """
+        bb
+        """
         self.clear_radio()
         self.clear_text()
         
     def clear_text(self):
+        """
+        bb
+        """
         self.NameLineEdit.clear()
         self.QuantityLineEdit.clear()
         self.DescriptionLineEdit.clear()
@@ -44,6 +56,9 @@ class Search(QMainWindow, Ui_MainWindow):
         self.ElseLineEdit.clear()
         
     def clear_radio(self):
+        """
+        bb
+        """
         
         self.radioButton_name.setAutoExclusive(False);
         self.radioButton_name.setChecked(False);
@@ -70,24 +85,33 @@ class Search(QMainWindow, Ui_MainWindow):
         
     
     def search_event(self):        
-        #rb = self.sender()
+        """
+        bb
+        """
+        
+        #take info from text boxes as relevant, checking radiobuttons
         if self.radioButton_name.isChecked():
             selection = 'name'
-            name = self.NameLineEdit.text().strip()
+            nameline = self.NameLineEdit.text().strip()
+            tokenVal = nameline
         
         elif self.radioButton_quantity.isChecked():
             selection = 'quantity'
-            name = self.QuantityLineEdit.text().strip()
+            quantityline = self.QuantityLineEdit.text().strip()
+            tokenVal = quantityline
         
         elif self.radioButton_description.isChecked():
             selection = 'description'
-            name = self.DescriptionLineEdit.text().strip()
+            descriptionline = self.DescriptionLineEdit.text().strip()
+            tokenVal = descriptionline
         
         elif self.radioButton_location.isChecked():
             selection = 'location'
-            name = self.LabelLineEdit.text().strip()
-            name = self.DrawerLineEdit.text().strip()
-            name = self.ElseLineEdit.text().strip()
+            labelline = self.LabelLineEdit.text().strip()
+            drawerline = self.DrawerLineEdit.text().strip()
+            elseline = self.ElseLineEdit.text().strip()
+            
+            tokenVal = labelline + drawerline
         
         elif self.radioButton_all.isChecked():
             selection = 'all'
@@ -98,12 +122,36 @@ class Search(QMainWindow, Ui_MainWindow):
             selection = 'N/A'
         
         
+        
         results_list = searcher(tokenVal, selection)
         
+        
+        print("\n\nRelevant results:")
         for item in results_list:
-            print()         #1 set to cp
-        output_writing(results_list)      #the other to an output file    
+            print("\t")
+            print(item)                     #Send to command line
+        print("End of search results\n\n")
+        output_writing(results_list)        #the other to an output file    
         
         
         
         
+        """
+        #dealing with inconvertable values
+        invalid_quantity= True
+        
+        if quantity_str.isdigit():
+            quantity = int(quantity_str)
+            if quantity >= 0:
+                invalid_quantity= False
+        if invalid_quantity:
+            self.error_indicator.setText('Enter a valid quantity')
+        else:
+            self.clear_radio()
+                
+            with open('search_results.csv', 'w', newline='') as output_csv_file:
+                content = csv.writer(output_csv_file)
+                #content.writerow(['Name', 'Age', 'Selection'])     #this line should already exist
+                content.writerow([Item_Name, '', Quantity, '', Location, '', Desc_an_Other_Info])
+                
+        """
